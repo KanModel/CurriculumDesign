@@ -81,17 +81,19 @@ public:
         tail->pre = head;
     }
 
-    void insert_tail(Node node);//从尾插入
-    void insert_tail(Staff data);//从尾插入
+    void insert_tail(Node *node);//从尾插入
+    void insert_tail(Staff *data);//从尾插入
 
-    void insert_head(Node node);//从头插入
-    void insert_head(Staff data);//从头插入
+    void insert_head(Node *node);//从头插入
+    void insert_head(Staff *data);//从头插入
 
     friend void add_teacher(List *list);
 
     friend void add_worker(List *list);
 
     friend void show_all_data(List *list);
+
+    friend void calc_ave_teacher_age(List *list);
 };
 
 void add_teacher(List *list) {
@@ -114,13 +116,16 @@ void add_teacher(List *list) {
     cin >> birth_year >> birth_month >> birth_day;
     cout << "请分别输入入职年、月、日：";
     cin >> work_year >> work_month >> work_day;
-    Node *node = new Node(
+    list->insert_head(
             new Teacher(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
-    node->next = list->head->next;
+/*    Node *node = new Node(
+            new Teacher(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
+    list->insert_head(node);*/
+/*    node->next = list->head->next;
     list->head->next = node;
     node->pre = list->head;
     node->next->pre = node;
-    list->count++;
+    list->count++;*/
 }
 
 void add_worker(List *list) {
@@ -143,13 +148,15 @@ void add_worker(List *list) {
     cin >> birth_year >> birth_month >> birth_day;
     cout << "请分别输入入职年、月、日：";
     cin >> work_year >> work_month >> work_day;
-    Node *node = new Node(
+    list->insert_head(
+            new Worker(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
+/*    Node *node = new Node(
             new Worker(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
     node->next = list->head->next;
     list->head->next = node;
     node->pre = list->head;
     node->next->pre = node;
-    list->count++;
+    list->count++;*/
 }
 
 void show_all_data(List *list) {
@@ -166,6 +173,31 @@ void show_all_data(List *list) {
              << setw(10) << data->name << setw(10) << (data->gender ? "男" : "女") << setw(10) << data->wage << endl;
     }
 }
+
+void calc_ave_teacher_age(List *list) {
+
+}
+
+void List::insert_head(Node *node) {
+    node->next = head->next;
+    head->next = node;
+    node->pre = head;
+    node->next->pre = node;
+    count++;
+}
+
+void List::insert_head(Staff *data) {
+    this->insert_head(new Node(data));
+}
+
+void List::insert_tail(Node *node) {
+
+}
+
+void List::insert_tail(Staff *data) {
+
+}
+
 
 int show_function() {
     int selection;
