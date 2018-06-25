@@ -27,8 +27,10 @@ public:
     string name;
     int gender;
     int wage;
-    int birth_year, birth_month, birth_day;
-    int work_year, work_month, work_day;
+    int birth_year;
+    int work_year;
+//    int birth_year, birth_month, birth_day;
+//    int work_year, work_month, work_day;
 
     virtual int whoIAm() {
         cout << "职工" << endl;
@@ -37,11 +39,8 @@ public:
 
     Staff() {}
 
-    Staff(string code, string name, int gender, int wage, int birth_year, int birth_month, int birth_day,
-          int work_year, int work_month, int work_day) : code(code), name(name), gender(gender), wage(wage),
-                                                         birth_year(birth_year), birth_month(birth_month),
-                                                         birth_day(birth_day), work_year(work_year),
-                                                         work_month(work_month), work_day(work_day) {}
+    Staff(const string &code, const string &name, int gender, int wage, int birth_year, int work_year) :
+            code(code), name(name), gender(gender), wage(wage), birth_year(birth_year), work_year(work_year) {}
 
 };
 
@@ -53,9 +52,8 @@ public:
 
     Teacher() {}
 
-    Teacher(string code, string name, int gender, int wage, int birth_year, int birth_month, int birth_day,
-            int work_year, int work_month, int work_day) : Staff(code, name, gender, wage, birth_year, birth_month,
-                                                                 birth_day, work_year, work_month, work_day) {}
+    Teacher(const string &code, const string &name, int gender, int wage, int birth_year, int work_year) :
+            Staff(code, name, gender, wage, birth_year, work_year) {}
 };
 
 class Worker : public Staff {
@@ -66,9 +64,8 @@ public:
 
     Worker() {}
 
-    Worker(string code, string name, int gender, int wage, int birth_year, int birth_month, int birth_day,
-           int work_year, int work_month, int work_day) : Staff(code, name, gender, wage, birth_year, birth_month,
-                                                                birth_day, work_year, work_month, work_day) {}
+    Worker(const string &code, const string &name, int gender, int wage, int birth_year, int work_year) :
+            Staff(code, name, gender, wage, birth_year, work_year) {}
 };
 
 class Node {
@@ -129,8 +126,8 @@ void add_teacher(List *list) {
     string name;
     int gender;
     int wage;
-    int birth_year, birth_month, birth_day;
-    int work_year, work_month, work_day;
+    int birth_year;
+    int work_year;
 
     cout << "请输入职工号：";
     cin >> code;
@@ -140,12 +137,12 @@ void add_teacher(List *list) {
     cin >> gender;
     cout << "请输入工资：";
     cin >> wage;
-    cout << "请分别输入生日年、月、日：";
-    cin >> birth_year >> birth_month >> birth_day;
-    cout << "请分别输入入职年、月、日：";
-    cin >> work_year >> work_month >> work_day;
+    cout << "请分别输入生日年份：";
+    cin >> birth_year;
+    cout << "请分别输入入职年份：";
+    cin >> work_year;
     list->insert_head(
-            new Teacher(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
+            new Teacher(code, name, gender, wage, birth_year, work_year));
 }
 
 void add_worker(List *list) {
@@ -153,8 +150,8 @@ void add_worker(List *list) {
     string name;
     int gender;
     int wage;
-    int birth_year, birth_month, birth_day;
-    int work_year, work_month, work_day;
+    int birth_year;
+    int work_year;
 
     cout << "请输入职工号：";
     cin >> code;
@@ -164,12 +161,12 @@ void add_worker(List *list) {
     cin >> gender;
     cout << "请输入工资：";
     cin >> wage;
-    cout << "请分别输入生日年、月、日：";
-    cin >> birth_year >> birth_month >> birth_day;
-    cout << "请分别输入入职年、月、日：";
-    cin >> work_year >> work_month >> work_day;
+    cout << "请分别输入生日年份：";
+    cin >> birth_year;
+    cout << "请分别输入入职年份：";
+    cin >> work_year;
     list->insert_head(
-            new Worker(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
+            new Worker(code, name, gender, wage, birth_year, work_year));
 }
 
 void show_all_data(List *list) {
@@ -243,7 +240,7 @@ void List::insert_tail(Staff *data) {
 
 void delete_teacher_by_name(List *list) {
     string name;
-    cout << "请输入需要删除教师的 姓名：" ;
+    cout << "请输入需要删除教师的 姓名：";
     cin >> name;
     Node *ptr = list->head;
     Staff *data;
@@ -264,7 +261,7 @@ void delete_teacher_by_name(List *list) {
 
 void delete_teacher_by_code(List *list) {
     string code;
-    cout << "请输入需要删除教师的 职工号：" ;
+    cout << "请输入需要删除教师的 职工号：";
     cin >> code;
     Node *ptr = list->head;
     Staff *data;
@@ -285,7 +282,7 @@ void delete_teacher_by_code(List *list) {
 
 void delete_worker_by_name(List *list) {
     string name;
-    cout << "请输入需要删除工人的 姓名：" ;
+    cout << "请输入需要删除工人的 姓名：";
     cin >> name;
     Node *ptr = list->head;
     Staff *data;
@@ -306,7 +303,7 @@ void delete_worker_by_name(List *list) {
 
 void delete_worker_by_code(List *list) {
     string code;
-    cout << "请输入需要删除工人的 职工号：" ;
+    cout << "请输入需要删除工人的 职工号：";
     cin >> code;
     Node *ptr = list->head;
     Staff *data;
@@ -327,7 +324,7 @@ void delete_worker_by_code(List *list) {
 
 void delete_teacher(List *list) {
     int flag;
-    cout << "请选择删除方式[0通过名字/1通过职工号]：" ;
+    cout << "请选择删除方式[0通过名字/1通过职工号]：";
     cin >> flag;
     switch (flag) {
         case ByName:
@@ -343,7 +340,7 @@ void delete_teacher(List *list) {
 
 void delete_worker(List *list) {
     int flag;
-    cout << "请选择删除方式[0通过名字/1通过职工号]：" ;
+    cout << "请选择删除方式[0通过名字/1通过职工号]：";
     cin >> flag;
     switch (flag) {
         case ByName:
