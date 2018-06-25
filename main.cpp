@@ -17,7 +17,7 @@ int getSystemTimeOfYear() {
 
 class Staff {
 public:
-    int code;
+    string code;
     string name;
     int gender;
     int wage;
@@ -31,7 +31,7 @@ public:
 
     Staff() {}
 
-    Staff(int code, const string &name, int gender, int wage, int birth_year, int birth_month, int birth_day,
+    Staff(string code, string name, int gender, int wage, int birth_year, int birth_month, int birth_day,
           int work_year, int work_month, int work_day) : code(code), name(name), gender(gender), wage(wage),
                                                          birth_year(birth_year), birth_month(birth_month),
                                                          birth_day(birth_day), work_year(work_year),
@@ -47,7 +47,7 @@ public:
 
     Teacher() {}
 
-    Teacher(int code, const string &name, int gender, int wage, int birth_year, int birth_month, int birth_day,
+    Teacher(string code, string name, int gender, int wage, int birth_year, int birth_month, int birth_day,
             int work_year, int work_month, int work_day) : Staff(code, name, gender, wage, birth_year, birth_month,
                                                                  birth_day, work_year, work_month, work_day) {}
 };
@@ -60,7 +60,7 @@ public:
 
     Worker() {}
 
-    Worker(int code, const string &name, int gender, int wage, int birth_year, int birth_month, int birth_day,
+    Worker(string code, string name, int gender, int wage, int birth_year, int birth_month, int birth_day,
            int work_year, int work_month, int work_day) : Staff(code, name, gender, wage, birth_year, birth_month,
                                                                 birth_day, work_year, work_month, work_day) {}
 };
@@ -102,10 +102,12 @@ public:
     friend void show_all_data(List *list);
 
     friend void calc_ave_teacher_age(List *list);
+
+    friend void calc_ave_worker_age(List *list);
 };
 
 void add_teacher(List *list) {
-    int code;
+    string code;
     string name;
     int gender;
     int wage;
@@ -126,18 +128,10 @@ void add_teacher(List *list) {
     cin >> work_year >> work_month >> work_day;
     list->insert_head(
             new Teacher(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
-/*    Node *node = new Node(
-            new Teacher(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
-    list->insert_head(node);*/
-/*    node->next = list->head->next;
-    list->head->next = node;
-    node->pre = list->head;
-    node->next->pre = node;
-    list->count++;*/
 }
 
 void add_worker(List *list) {
-    int code;
+    string code;
     string name;
     int gender;
     int wage;
@@ -158,13 +152,6 @@ void add_worker(List *list) {
     cin >> work_year >> work_month >> work_day;
     list->insert_head(
             new Worker(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
-/*    Node *node = new Node(
-            new Worker(code, name, gender, wage, birth_year, birth_month, birth_day, work_year, work_month, work_day));
-    node->next = list->head->next;
-    list->head->next = node;
-    node->pre = list->head;
-    node->next->pre = node;
-    list->count++;*/
 }
 
 void show_all_data(List *list) {
@@ -183,7 +170,37 @@ void show_all_data(List *list) {
 }
 
 void calc_ave_teacher_age(List *list) {
+    int count = 0, sum = 0;
+    double ave_age;
+    Node *ptr = list->head;
+    Staff *data;
+    while (ptr->next != nullptr && ptr->next->next != nullptr) {
+        ptr = ptr->next;
+        data = ptr->data;
+        if (data->whoIAm() == 0) {
+            count++;
+            sum += (getSystemTimeOfYear() - data->birth_year);
+        }
+    }
+    ave_age = sum / count;
+    cout << "教师平均年龄：" << ave_age << endl;
+}
 
+void calc_ave_worker_age(List *list) {
+    int count = 0, sum = 0;
+    double ave_age;
+    Node *ptr = list->head;
+    Staff *data;
+    while (ptr->next != nullptr && ptr->next->next != nullptr) {
+        ptr = ptr->next;
+        data = ptr->data;
+        if (data->whoIAm() == 1) {
+            count++;
+            sum += (getSystemTimeOfYear() - data->birth_year);
+        }
+    }
+    ave_age = sum / count;
+    cout << "工人平均年龄：" << ave_age << endl;
 }
 
 void List::insert_head(Node *node) {
@@ -239,7 +256,7 @@ int main() {
                 show_all_data(list);
                 break;
             case 4://计算教师平均年龄
-
+                calc_ave_teacher_age(list);
                 break;
             case 5://计算工人平均年龄
 
