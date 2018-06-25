@@ -7,6 +7,14 @@ using namespace std;
 const int FEMALE = 0;
 const int MALE = 1;
 
+int getSystemTimeOfYear() {
+    time_t timer;
+    time(&timer);
+    tm *t_tm = localtime(&timer);
+//    cout << "today is " << t_tm->tm_year + 1900 << " " << t_tm->tm_mon + 1 << " " << t_tm->tm_mday << endl;
+    return (t_tm->tm_year + 1900);
+}
+
 class Staff {
 public:
     int code;
@@ -164,13 +172,13 @@ void show_all_data(List *list) {
     Staff *data;
     int count = 1;
     cout << right << setw(10) << "序号" << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
-         << setw(10) << "工资"
-         << endl;
+         << setw(10) << "工资" << setw(10) << "年龄" << endl;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
         data = ptr->data;
         cout << right << setw(10) << count++ << setw(10) << (data->whoIAm() ? "工人" : "教师") << setw(10) << data->code
-             << setw(10) << data->name << setw(10) << (data->gender ? "男" : "女") << setw(10) << data->wage << endl;
+             << setw(10) << data->name << setw(10) << (data->gender ? "男" : "女") << setw(10) << data->wage << setw(10)
+             << getSystemTimeOfYear() - data->birth_year << endl;
     }
 }
 
