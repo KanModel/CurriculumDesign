@@ -170,8 +170,8 @@ void show_all_data(List *list) {
 }
 
 void calc_ave_teacher_age(List *list) {
-    int count = 0, sum = 0;
-    double ave_age;
+    int count = 0;
+    double ave_age, sum = 0;
     Node *ptr = list->head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
@@ -187,8 +187,8 @@ void calc_ave_teacher_age(List *list) {
 }
 
 void calc_ave_worker_age(List *list) {
-    int count = 0, sum = 0;
-    double ave_age;
+    int count = 0;
+    double ave_age, sum = 0;
     Node *ptr = list->head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
