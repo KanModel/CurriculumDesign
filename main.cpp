@@ -7,6 +7,12 @@ using namespace std;
 const int FEMALE = 0;
 const int MALE = 1;
 
+const int TEACHER = 0;
+const int WORKER = 1;
+
+const int ByName = 0;
+const int ByCode = 1;
+
 int getSystemTimeOfYear() {
     time_t timer;
     time(&timer);
@@ -42,7 +48,7 @@ public:
 class Teacher : public Staff {
 public:
     int whoIAm() override {
-        return 0;
+        return TEACHER;
     }
 
     Teacher() {}
@@ -55,7 +61,7 @@ public:
 class Worker : public Staff {
 public:
     int whoIAm() override {
-        return 1;
+        return WORKER;
     }
 
     Worker() {}
@@ -104,6 +110,18 @@ public:
     friend void calc_ave_teacher_age(List *list);
 
     friend void calc_ave_worker_age(List *list);
+
+    friend void delete_teacher(List *list);
+
+    friend void delete_teacher_by_name(List *list);
+
+    friend void delete_teacher_by_code(List *list);
+
+    friend void delete_worker(List *list);
+
+    friend void delete_worker_by_name(List *list);
+
+    friend void delete_worker_by_code(List *list);
 };
 
 void add_teacher(List *list) {
@@ -177,7 +195,7 @@ void calc_ave_teacher_age(List *list) {
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
         data = ptr->data;
-        if (data->whoIAm() == 0) {
+        if (data->whoIAm() == TEACHER) {
             count++;
             sum += (getSystemTimeOfYear() - data->birth_year);
         }
@@ -194,7 +212,7 @@ void calc_ave_worker_age(List *list) {
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
         data = ptr->data;
-        if (data->whoIAm() == 1) {
+        if (data->whoIAm() == WORKER) {
             count++;
             sum += (getSystemTimeOfYear() - data->birth_year);
         }
@@ -216,11 +234,127 @@ void List::insert_head(Staff *data) {
 }
 
 void List::insert_tail(Node *node) {
-
+    //todo
 }
 
 void List::insert_tail(Staff *data) {
+    //todo
+}
 
+void delete_teacher_by_name(List *list) {
+    string name;
+    cout << "请输入需要删除教师的 姓名：" ;
+    cin >> name;
+    Node *ptr = list->head;
+    Staff *data;
+    while (ptr->next != nullptr && ptr->next->next != nullptr) {
+        ptr = ptr->next;
+        data = ptr->data;
+        if (data->whoIAm() == TEACHER) {
+            if (data->name == name) {
+                ptr->pre->next = ptr->next;
+                delete ptr;
+                cout << "成功删除姓名为 " << name << " 的教师" << endl;
+                return;
+            }
+        }
+    }
+    cout << "表中无名为 " << name << " 的教师" << endl;
+}
+
+void delete_teacher_by_code(List *list) {
+    string code;
+    cout << "请输入需要删除教师的 职工号：" ;
+    cin >> code;
+    Node *ptr = list->head;
+    Staff *data;
+    while (ptr->next != nullptr && ptr->next->next != nullptr) {
+        ptr = ptr->next;
+        data = ptr->data;
+        if (data->whoIAm() == TEACHER) {
+            if (data->code == code) {
+                ptr->pre->next = ptr->next;
+                delete ptr;
+                cout << "成功删除 职工号 为 " << code << " 的教师" << endl;
+                return;
+            }
+        }
+    }
+    cout << "表中无 职工号 为 " << code << " 的教师" << endl;
+}
+
+void delete_worker_by_name(List *list) {
+    string name;
+    cout << "请输入需要删除工人的 姓名：" ;
+    cin >> name;
+    Node *ptr = list->head;
+    Staff *data;
+    while (ptr->next != nullptr && ptr->next->next != nullptr) {
+        ptr = ptr->next;
+        data = ptr->data;
+        if (data->whoIAm() == WORKER) {
+            if (data->name == name) {
+                ptr->pre->next = ptr->next;
+                delete ptr;
+                cout << "成功删除姓名为 " << name << " 的工人" << endl;
+                return;
+            }
+        }
+    }
+    cout << "表中无名为 " << name << " 的工人" << endl;
+}
+
+void delete_worker_by_code(List *list) {
+    string code;
+    cout << "请输入需要删除工人的 职工号：" ;
+    cin >> code;
+    Node *ptr = list->head;
+    Staff *data;
+    while (ptr->next != nullptr && ptr->next->next != nullptr) {
+        ptr = ptr->next;
+        data = ptr->data;
+        if (data->whoIAm() == WORKER) {
+            if (data->code == code) {
+                ptr->pre->next = ptr->next;
+                delete ptr;
+                cout << "成功删除 职工号 为 " << code << " 的工人" << endl;
+                return;
+            }
+        }
+    }
+    cout << "表中无 职工号 为 " << code << " 的工人" << endl;
+}
+
+void delete_teacher(List *list) {
+    int flag;
+    cout << "请选择删除方式[0通过名字/1通过职工号]：" ;
+    cin >> flag;
+    switch (flag) {
+        case ByName:
+            delete_teacher_by_name(list);
+            break;
+        case ByCode:
+            delete_teacher_by_code(list);
+            break;
+        default:
+            cout << "请输入正确选项！" << endl;
+    }
+}
+
+void delete_worker(List *list) {
+    int flag;
+    cout << "请选择删除方式[0通过名字/1通过职工号]：" ;
+    cin >> flag;
+    switch (flag) {
+        case ByName:
+            delete_worker_by_name(list);
+            break;
+        case ByCode:
+            delete_worker_by_code(list);
+            break;
+        default:
+            cout << "请输入正确选项！" << endl;
+    }
 }
 
 
@@ -259,13 +393,13 @@ int main() {
                 calc_ave_teacher_age(list);
                 break;
             case 5://计算工人平均年龄
-
+                calc_ave_worker_age(list);
                 break;
             case 6://删除一个教师
-
+                delete_teacher(list);
                 break;
             case 7://删除一个工人
-
+                delete_worker(list);
                 break;
             case 8://按姓名检索所有信息
 
