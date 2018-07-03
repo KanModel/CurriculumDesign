@@ -17,7 +17,6 @@ int getSystemTimeOfYear() {
     time_t timer;
     time(&timer);
     tm *t_tm = localtime(&timer);
-//    cout << "today is " << t_tm->tm_year + 1900 << " " << t_tm->tm_mon + 1 << " " << t_tm->tm_mday << endl;
     return (t_tm->tm_year + 1900);
 }
 
@@ -29,8 +28,6 @@ public:
     int wage;
     int birth_year;
     int work_year;
-//    int birth_year, birth_month, birth_day;
-//    int work_year, work_month, work_day;
 
     virtual int whoIAm() {
         cout << "职工" << endl;
@@ -95,8 +92,12 @@ public:
     void insert_tail(Node *node);//从尾插入
     void insert_tail(Staff *data);//从尾插入
 
-    void insert_head(Node *node);//从头插入
+    void insert_head(Node *copy);//从头插入
     void insert_head(Staff *data);//从头插入
+
+    bool isEmpty(){
+        return count == 0;
+    }
 
     friend void add_teacher(List *list);
 
@@ -119,6 +120,8 @@ public:
     friend void delete_worker_by_name(List *list);
 
     friend void delete_worker_by_code(List *list);
+
+    friend void find_by_name(List *list);
 };
 
 void add_teacher(List *list) {
@@ -170,6 +173,10 @@ void add_worker(List *list) {
 }
 
 void show_all_data(List *list) {
+    if (list->isEmpty()) {
+        cout << "数据为空！" << endl;
+        return;
+    }
     Node *ptr = list->head;
     Staff *data;
     int count = 1;
@@ -219,10 +226,12 @@ void calc_ave_worker_age(List *list) {
 }
 
 void List::insert_head(Node *node) {
-    node->next = head->next;
-    head->next = node;
-    node->pre = head;
-    node->next->pre = node;
+    Node *copy = new Node(*node);
+
+    copy->next = head->next;
+    copy->pre = head;
+    head->next = copy;
+    copy->next->pre = copy;
     count++;
 }
 
@@ -231,11 +240,17 @@ void List::insert_head(Staff *data) {
 }
 
 void List::insert_tail(Node *node) {
-    //todo
+    Node *copy = new Node(*node);
+
+    copy->next = tail;
+    copy->pre = tail->pre;
+    tail->pre->next = copy;
+    tail->pre = copy;
+    count++;
 }
 
 void List::insert_tail(Staff *data) {
-    //todo
+    this->insert_head(new Node(data));
 }
 
 void delete_teacher_by_name(List *list) {
@@ -354,6 +369,23 @@ void delete_worker(List *list) {
     }
 }
 
+void find_by_name(List *list) {
+    string name;
+    cout << "请输入姓名:";
+    cin >> name;
+    Node *ptr = list->head;
+    Staff *data;
+    while (ptr->next != nullptr && ptr->next->next != nullptr) {
+        ptr = ptr->next;
+        data = ptr->data;
+        if (data->name == name) {
+            cout << right << setw(10) << (data->whoIAm() ? "工人" : "教师") << setw(10) << data->code
+                 << setw(10) << data->name << setw(10) << (data->gender ? "男" : "女") << setw(10) << data->wage << setw(10)
+                 << getSystemTimeOfYear() - data->birth_year << endl;
+            return;
+        }
+    }
+}
 
 int show_function() {
     int selection;
@@ -399,7 +431,7 @@ int main() {
                 delete_worker(list);
                 break;
             case 8://按姓名检索所有信息
-
+                find_by_name(list);
                 break;
             case 9:
 
