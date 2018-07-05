@@ -106,6 +106,7 @@ public:
 };
 
 class List {
+private:
     int count;
     Node *head, *tail;
 
@@ -115,42 +116,67 @@ public:
         tail->pre = head;
     }
 
+    int getCount() {
+        return count;
+    }
+
+    void setCount(int count) {
+        this->count = count;
+    }
+
+    Node *getHead() {
+        return head;
+    }
+
+    void setHead(Node *head) {
+        this->head = head;
+    }
+
+    Node *getTail() {
+        return tail;
+    }
+
+    void setTail(Node *tail) {
+        this->tail = tail;
+    }
+
     void insert_tail(Node *node);//从尾插入
     void insert_tail(Staff *data);//从尾插入
 
     void insert_head(Node *copy);//从头插入
     void insert_head(Staff *data);//从头插入
 
-    bool isEmpty(){
+    bool isEmpty() {
         return count == 0;
     }
 
-    friend void add_teacher(List *list);
+    void add_teacher();
 
-    friend void add_worker(List *list);
+    void add_worker();
 
-    friend void show_all_data(List *list);
+    void show_all_data();
 
-    friend void calc_ave_teacher_age(List *list);
+    void calc_ave_teacher_age();
 
-    friend void calc_ave_worker_age(List *list);
+    void calc_ave_worker_age();
 
-    friend void delete_teacher(List *list);
+    void delete_teacher();
 
-    friend void delete_teacher_by_name(List *list);
+    void delete_teacher_by_name();
 
-    friend void delete_teacher_by_code(List *list);
+    void delete_teacher_by_code();
 
-    friend void delete_worker(List *list);
+    void delete_worker();
 
-    friend void delete_worker_by_name(List *list);
+    void delete_worker_by_name();
 
-    friend void delete_worker_by_code(List *list);
+    void delete_worker_by_code();
 
-    friend void find_by_name(List *list);
+    void find_by_name();
+
 };
 
-void add_teacher(List *list) {
+void List::add_teacher() {
     string code;
     string name;
     int gender;
@@ -170,11 +196,10 @@ void add_teacher(List *list) {
     cin >> birth_year;
     cout << "请分别输入入职年份：";
     cin >> work_year;
-    list->insert_head(
-            new Teacher(code, name, gender, wage, birth_year, work_year));
+    insert_head(new Teacher(code, name, gender, wage, birth_year, work_year));
 }
 
-void add_worker(List *list) {
+void List::add_worker() {
     string code;
     string name;
     int gender;
@@ -194,16 +219,15 @@ void add_worker(List *list) {
     cin >> birth_year;
     cout << "请分别输入入职年份：";
     cin >> work_year;
-    list->insert_head(
-            new Worker(code, name, gender, wage, birth_year, work_year));
+    insert_head(new Worker(code, name, gender, wage, birth_year, work_year));
 }
 
-void show_all_data(List *list) {
-    if (list->isEmpty()) {
+void List::show_all_data() {
+    if (isEmpty()) {
         cout << "数据为空！" << endl;
         return;
     }
-    Node *ptr = list->head;
+    Node *ptr = head;
     Staff *data;
     int count = 1;
     cout << right << setw(10) << "序号" << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
@@ -217,10 +241,10 @@ void show_all_data(List *list) {
     }
 }
 
-void calc_ave_teacher_age(List *list) {
+void List::calc_ave_teacher_age() {
     int count = 0;
     double ave_age, sum = 0;
-    Node *ptr = list->head;
+    Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
@@ -234,10 +258,10 @@ void calc_ave_teacher_age(List *list) {
     cout << "教师平均年龄：" << ave_age << endl;
 }
 
-void calc_ave_worker_age(List *list) {
+void List::calc_ave_worker_age() {
     int count = 0;
     double ave_age, sum = 0;
-    Node *ptr = list->head;
+    Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
@@ -279,11 +303,11 @@ void List::insert_tail(Staff *data) {
     this->insert_head(new Node(data));
 }
 
-void delete_teacher_by_name(List *list) {
+void List::delete_teacher_by_name() {
     string name;
     cout << "请输入需要删除教师的 姓名：";
     cin >> name;
-    Node *ptr = list->head;
+    Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
@@ -300,11 +324,11 @@ void delete_teacher_by_name(List *list) {
     cout << "表中无名为 " << name << " 的教师" << endl;
 }
 
-void delete_teacher_by_code(List *list) {
+void List::delete_teacher_by_code() {
     string code;
     cout << "请输入需要删除教师的 职工号：";
     cin >> code;
-    Node *ptr = list->head;
+    Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
@@ -321,11 +345,11 @@ void delete_teacher_by_code(List *list) {
     cout << "表中无 职工号 为 " << code << " 的教师" << endl;
 }
 
-void delete_worker_by_name(List *list) {
+void List::delete_worker_by_name() {
     string name;
     cout << "请输入需要删除工人的 姓名：";
     cin >> name;
-    Node *ptr = list->head;
+    Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
@@ -342,11 +366,11 @@ void delete_worker_by_name(List *list) {
     cout << "表中无名为 " << name << " 的工人" << endl;
 }
 
-void delete_worker_by_code(List *list) {
+void List::delete_worker_by_code() {
     string code;
     cout << "请输入需要删除工人的 职工号：";
     cin >> code;
-    Node *ptr = list->head;
+    Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
@@ -363,50 +387,51 @@ void delete_worker_by_code(List *list) {
     cout << "表中无 职工号 为 " << code << " 的工人" << endl;
 }
 
-void delete_teacher(List *list) {
+void List::delete_teacher() {
     int flag;
     cout << "请选择删除方式[0通过名字/1通过职工号]：";
     cin >> flag;
     switch (flag) {
         case ByName:
-            delete_teacher_by_name(list);
+            delete_teacher_by_name();
             break;
         case ByCode:
-            delete_teacher_by_code(list);
+            delete_teacher_by_code();
             break;
         default:
             cout << "请输入正确选项！" << endl;
     }
 }
 
-void delete_worker(List *list) {
+void List::delete_worker() {
     int flag;
     cout << "请选择删除方式[0通过名字/1通过职工号]：";
     cin >> flag;
     switch (flag) {
         case ByName:
-            delete_worker_by_name(list);
+            delete_worker_by_name();
             break;
         case ByCode:
-            delete_worker_by_code(list);
+            delete_worker_by_code();
             break;
         default:
             cout << "请输入正确选项！" << endl;
     }
 }
 
-void find_by_name(List *list) {
+void List::find_by_name() {
     string name;
     cout << "请输入姓名:";
     cin >> name;
-    Node *ptr = list->head;
+    Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
         data = ptr->data;
         if (data->name == name) {
             cout << right << setw(10) << (data->whoIAm() ? "工人" : "教师") << setw(10) << data->code
-                 << setw(10) << data->name << setw(10) << (data->gender ? "男" : "女") << setw(10) << data->wage << setw(10)
+                 << setw(10) << data->name << setw(10) << (data->gender ? "男" : "女") << setw(10) << data->wage
+                 << setw(10)
                  << getSystemTimeOfYear() - data->birth_year << endl;
             return;
         }
@@ -436,28 +461,28 @@ int main() {
     while (selection != 0) {
         switch (selection) {
             case 1://增加一位教师记录
-                add_teacher(list);
+                list->add_teacher();
                 break;
             case 2://增加一位工人记录
-                add_worker(list);
+                list->add_worker();
                 break;
             case 3://显示全部职工记录
-                show_all_data(list);
+                list->show_all_data();
                 break;
             case 4://计算教师平均年龄
-                calc_ave_teacher_age(list);
+                list->calc_ave_teacher_age();
                 break;
             case 5://计算工人平均年龄
-                calc_ave_worker_age(list);
+                list->calc_ave_worker_age();
                 break;
             case 6://删除一个教师
-                delete_teacher(list);
+                list->delete_teacher();
                 break;
             case 7://删除一个工人
-                delete_worker(list);
+                list->delete_worker();
                 break;
             case 8://按姓名检索所有信息
-                find_by_name(list);
+                list->find_by_name();
                 break;
             case 9:
 
