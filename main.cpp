@@ -12,21 +12,22 @@
 （9）显示年龄分布的柱状图，示例如下：
 （10）参考界面如下：
 设计功能：
-增加一位教师记录
-增加一位工人记录
-显示全部职工记录
-计算教师平均年龄
-计算工人平均年龄
-删除一个教师
-删除一个工人
+增加一位教师记录 √
+增加一位工人记录 √
+显示全部职工记录 todo 美化输出
+计算教师平均年龄 √
+计算工人平均年龄 √
+删除一个教师 √
+删除一个工人 √
 按系输出教师信息（可选）
 按姓名检索所有信息
-结束程序运行
+结束程序运行 √
 */
 
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <fstream>
 
 using namespace std;
 
@@ -103,6 +104,30 @@ public:
     Node(Staff *data) : data(data), next(nullptr), pre(nullptr) {}
 
     Node() : next(nullptr), pre(nullptr) {}
+
+    Node *getNext() {
+        return next;
+    }
+
+    void setNext(Node *next) {
+        this->next = next;
+    }
+
+    Node *getPre() {
+        return pre;
+    }
+
+    void setPre(Node *pre) {
+        this->pre = pre;
+    }
+
+    Staff *getData() {
+        return data;
+    }
+
+    void setData(Staff *data) {
+        this->data = data;
+    }
 };
 
 class List {
@@ -140,21 +165,23 @@ public:
         this->tail = tail;
     }
 
+    bool isEmpty() {
+        return count == 0;
+    }
+
     void insert_tail(Node *node);//从尾插入
     void insert_tail(Staff *data);//从尾插入
 
     void insert_head(Node *copy);//从头插入
     void insert_head(Staff *data);//从头插入
 
-    bool isEmpty() {
-        return count == 0;
-    }
-
     void add_teacher();
 
     void add_worker();
 
     void show_all_data();
+
+    void show_simple_data();
 
     void calc_ave_teacher_age();
 
@@ -174,6 +201,9 @@ public:
 
     void find_by_name();
 
+    void read_data();
+
+    void save_data();
 };
 
 void List::add_teacher() {
@@ -241,6 +271,23 @@ void List::show_all_data() {
     }
 }
 
+void List::show_simple_data() {
+    if (isEmpty()) {
+        cout << "数据为空！" << endl;
+        return;
+    }
+    Node *ptr = head;
+    Staff *data;
+    int count = 1;
+    cout << right << setw(10) << "序号" << setw(10) << "职别" << setw(10) << "姓名" << setw(10) << "年龄" << endl;
+    while (ptr->next != nullptr && ptr->next->next != nullptr) {
+        ptr = ptr->next;
+        data = ptr->data;
+        cout << right << setw(10) << count++ << setw(10) << (data->whoIAm() ? "工人" : "教师") << setw(10) << data->name
+             << setw(10) << getSystemTimeOfYear() - data->birth_year << endl;
+    }
+}
+
 void List::calc_ave_teacher_age() {
     int count = 0;
     double ave_age, sum = 0;
@@ -300,7 +347,7 @@ void List::insert_tail(Node *node) {
 }
 
 void List::insert_tail(Staff *data) {
-    this->insert_head(new Node(data));
+    this->insert_tail(new Node(data));
 }
 
 void List::delete_teacher_by_name() {
@@ -438,17 +485,112 @@ void List::find_by_name() {
     }
 }
 
+void List::read_data() {
+    ofstream ofile;
+    ofile.open("data.txt", ios::app);
+    if (!ofile) return;
+    else {
+        ofile.close();
+        ifstream infile;
+        infile.open("data.txt", ios::in);
+        while (!infile.eof()) {
+//        insert_head(new Teacher(code, name, gender, wage, birth_year, work_year));
+            string str;
+            infile >> str;
+            if (str.length() == 0) {
+                break;
+            }
+            int be = atoi(str.c_str());
+            if (be == TEACHER) {
+                Teacher *data = new Teacher;
+                infile >> data->code;
+                infile >> data->name;
+                infile >> data->gender;
+                infile >> data->wage;
+                infile >> data->birth_year;
+                infile >> data->work_year;
+                insert_tail(data);
+            } else if (be == WORKER) {
+                Worker *data = new Worker;
+                infile >> data->code;
+                infile >> data->name;
+                infile >> data->gender;
+                infile >> data->wage;
+                infile >> data->birth_year;
+                infile >> data->work_year;
+                insert_tail(data);
+            }
+        }
+    }
+}
+
+/*int staff::read(class staff* head)
+{
+    ofstream infile1;
+    infile1.open("职工系统.txt",ios::app);
+    if(!infile1)
+    {
+        return 0;
+    }
+    else
+    {
+        infile1.close();
+        ifstream infile;
+        infile.open("职工系统.txt",ios::in);
+        while(!infile.eof())
+        {
+            staff* newnode = new staff;
+            infile >> newnode->employee_number;
+            if(newnode->employee_number.length() == 0)
+            {
+                delete newnode;
+                break;
+            }
+            infile >> newnode->name;
+            infile >> newnode->sex;
+            infile >> newnode->age;
+            infile >> newnode->zip_code;
+            infile >> newnode->department;
+            infile >> newnode->wage;
+            head->next = newnode;
+            head = head->next;
+        }
+        infile.close();
+    }
+    return 0;
+}*/
+
+void List::save_data() {
+    ofstream outfile;
+    outfile.open("data.txt", ios::out);
+    Node *ptr = getHead()->getNext();
+    while (ptr->getNext() != nullptr) {
+        Staff *data = ptr->getData();
+        outfile << data->whoIAm() << '\t';
+        outfile << data->code << '\t';
+        outfile << data->name << '\t';
+        outfile << data->gender << '\t';
+        outfile << data->wage << '\t';
+        outfile << data->birth_year << '\t';
+        outfile << data->work_year << '\t';
+        ptr = ptr->getNext();
+    }
+    outfile.close();
+}
+
+
 int show_function() {
     int selection;
     cout << "职工信息记录" << endl;
     cout << "1.增加一位教师记录" << endl;
     cout << "2.增加一位工人记录" << endl;
     cout << "3.显示全部职工记录" << endl;
-    cout << "4.计算教师平均年龄" << endl;
-    cout << "5.计算工人平均年龄" << endl;
-    cout << "6.删除一个教师" << endl;
-    cout << "7.删除一个工人" << endl;
-    cout << "8.按姓名检索所有信息" << endl;
+    cout << "4.显示职工信息简表" << endl;
+    cout << "5.计算教师平均年龄" << endl;
+    cout << "6.计算工人平均年龄" << endl;
+    cout << "7.删除一个教师" << endl;
+    cout << "8.删除一个工人" << endl;
+    cout << "9.按姓名检索所有信息" << endl;
     cout << "0.结束程序运行" << endl;
 
     cin >> selection;
@@ -457,6 +599,7 @@ int show_function() {
 
 int main() {
     List *list = new List;
+    list->read_data();
     int selection = show_function();
     while (selection != 0) {
         switch (selection) {
@@ -469,23 +612,23 @@ int main() {
             case 3://显示全部职工记录
                 list->show_all_data();
                 break;
-            case 4://计算教师平均年龄
+            case 4://显示全部职工简表
+                list->show_simple_data();
+                break;
+            case 5://计算教师平均年龄
                 list->calc_ave_teacher_age();
                 break;
-            case 5://计算工人平均年龄
+            case 6://计算工人平均年龄
                 list->calc_ave_worker_age();
                 break;
-            case 6://删除一个教师
+            case 7://删除一个教师
                 list->delete_teacher();
                 break;
-            case 7://删除一个工人
+            case 8://删除一个工人
                 list->delete_worker();
                 break;
-            case 8://按姓名检索所有信息
+            case 9://按姓名检索所有信息
                 list->find_by_name();
-                break;
-            case 9:
-
                 break;
             default:
                 selection = show_function();
@@ -493,5 +636,6 @@ int main() {
         }
         selection = show_function();
     }
+    list->save_data();
     return 0;
 }
