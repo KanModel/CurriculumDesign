@@ -584,7 +584,7 @@ void List::save_data() {
 int List::showGraph() {
     Node *current = getHead()->next;
     int length = getCount();
-    int number[5] = {0};
+    double number[5] = {0.0};
     if (isEmpty()) {
         cout << "没有数据！" << endl;
         return 0;
@@ -605,12 +605,12 @@ int List::showGraph() {
         current = current->getNext();
     }
     for (int i = 0; i < 5; i++) {
-        number[i] = (double) number[i] / getCount() * 10;
+        number[i] = (double) number[i] / getCount() * 100;
     }
     cout << "年龄分布百分比统计图" << endl;
     string arr[10][5];
     for (int i = 0; i < 5; i++) {
-        int count = number[i];
+        int count = number[i] / 10;
         for (int j = 9; j >= 0; j--) {
             if (number[i] == 0) {
                 break;
@@ -622,10 +622,7 @@ int List::showGraph() {
                 }
                 count--;
             }
-
         }
-
-
     }
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 5; j++) {
@@ -633,6 +630,13 @@ int List::showGraph() {
         }
         cout << endl;
     }
+    for (int i = 0; i < 5; i++) {
+        if (number[i] != 0) {
+            printf("%.1f", number[i]);
+            cout << "%";
+        }
+    }
+    cout << endl;
     for (int i = 0; i < 5; i++) {
         if (number[i] != 0) {
             switch (i) {
