@@ -66,7 +66,14 @@ public:
     Staff(const string &code, const string &name, int gender, int wage, int birth_year, int work_year) :
             code(code), name(name), gender(gender), wage(wage), birth_year(birth_year), work_year(work_year) {}
 
+    friend ostream &operator<<(ostream &out, Staff &data);
 };
+
+ostream &operator<<(ostream &out, Staff &data) {
+    cout << right << setw(10) << (data.whoIAm() ? "工人" : "教师") << setw(10) << data.code
+         << setw(10) << data.name << setw(10) << (data.gender ? "男" : "女") << setw(10) << data.wage << setw(10)
+         << getSystemTimeOfYear() - data.birth_year;
+}
 
 class Teacher : public Staff {
 public:
@@ -288,9 +295,7 @@ void List::show_all_data() {
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
         data = ptr->data;
-        cout << right << setw(10) << count++ << setw(10) << (data->whoIAm() ? "工人" : "教师") << setw(10) << data->code
-             << setw(10) << data->name << setw(10) << (data->gender ? "男" : "女") << setw(10) << data->wage << setw(10)
-             << getSystemTimeOfYear() - data->birth_year << endl;
+        cout << right << setw(10) << count++ << *data << endl;
     }
 }
 
