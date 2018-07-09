@@ -1,15 +1,15 @@
 /*
 设计要求：
 设计要求实现如下功能：
-（1）建立职工信息数据，包括职工编号、姓名、性别、工资、出生时间、参加工作时间和年龄（必须计算得到）。
-（2）根据职工信息表，建立只含有姓名和年龄的职工信息简表。（可选功能）
-（3）使用继承的方法构造3个类，（即雇员类——虚基类，教师类和工人类——派生类）使用相应的对象放置10个职工信息。
+（1）建立职工信息数据，包括职工编号、姓名、性别、工资、出生时间、参加工作时间和年龄（必须计算得到）。 √
+（2）根据职工信息表，建立只含有姓名和年龄的职工信息简表。（可选功能） √
+（3）使用继承的方法构造3个类，（即雇员类——虚基类，教师类和工人类——派生类）使用相应的对象放置10个职工信息。 todo 10个信息
 （4）编写同名display()成员函数，用来输出数组的内容。
 （5）按不同类别输出职工信息，比如按系输出教师信息。（可选功能）
 （6）要求对“＜＜”和“＞＞”运算符进行重载。考虑到输人职工编号时，也会因不小心引人空格，而且名字中也需要有空格，所以重载“＞＞’’运算符时，需要满足这个要求。
 （7）抽取并计算职工的平均年龄。
-（8）检索（查找）指定信息。（如按姓名检索、按年龄检索）
-（9）显示年龄分布的柱状图，示例如下：
+（8）检索（查找）指定信息。（如按姓名检索、按年龄检索） todo
+（9）显示年龄分布的柱状图，示例如下： todo
 （10）参考界面如下：
 设计功能：
 增加一位教师记录 √
@@ -20,7 +20,7 @@
 删除一个教师 √
 删除一个工人 √
 按系输出教师信息（可选）
-按姓名检索所有信息
+按姓名检索所有信息 √
 结束程序运行 √
 */
 
@@ -524,42 +524,6 @@ void List::read_data() {
     }
 }
 
-/*int staff::read(class staff* head)
-{
-    ofstream infile1;
-    infile1.open("职工系统.txt",ios::app);
-    if(!infile1)
-    {
-        return 0;
-    }
-    else
-    {
-        infile1.close();
-        ifstream infile;
-        infile.open("职工系统.txt",ios::in);
-        while(!infile.eof())
-        {
-            staff* newnode = new staff;
-            infile >> newnode->employee_number;
-            if(newnode->employee_number.length() == 0)
-            {
-                delete newnode;
-                break;
-            }
-            infile >> newnode->name;
-            infile >> newnode->sex;
-            infile >> newnode->age;
-            infile >> newnode->zip_code;
-            infile >> newnode->department;
-            infile >> newnode->wage;
-            head->next = newnode;
-            head = head->next;
-        }
-        infile.close();
-    }
-    return 0;
-}*/
-
 void List::save_data() {
     ofstream outfile;
     outfile.open("data.txt", ios::out);
@@ -631,7 +595,7 @@ int main() {
                 list->find_by_name();
                 break;
             default:
-                selection = show_function();
+                cout << "请输入正确操作数字！" <<endl;
                 break;
         }
         selection = show_function();
