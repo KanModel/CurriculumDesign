@@ -8,13 +8,13 @@
 （5）按不同类别输出职工信息，比如按系输出教师信息。（可选功能） todo
 （6）要求对“＜＜”和“＞＞”运算符进行重载。考虑到输人职工编号时，也会因不小心引人空格，而且名字中也需要有空格，所以重载“＞＞’’运算符时，需要满足这个要求。 √
 （7）抽取并计算职工的平均年龄。 √
-（8）检索（查找）指定信息。（如按姓名检索、按年龄检索） todo
-（9）显示年龄分布的柱状图，示例如下： todo
+（8）检索（查找）指定信息。（如按姓名检索、按年龄检索） √
+（9）显示年龄分布的柱状图，示例如下： √
 （10）参考界面如下：
 设计功能：
 增加一位教师记录 √
 增加一位工人记录 √
-显示全部职工记录 todo 美化输出
+显示全部职工记录 √
 计算教师平均年龄 √
 计算工人平均年龄 √
 删除一个教师 √
@@ -72,7 +72,7 @@ public:
 ostream &operator<<(ostream &out, Staff &data) {
     cout << right << setw(10) << (data.whoIAm() ? "工人" : "教师") << setw(10) << data.code
          << setw(10) << data.name << setw(10) << (data.gender ? "男" : "女") << setw(10) << data.wage << setw(10)
-         << getSystemTimeOfYear() - data.birth_year;
+         << getSystemTimeOfYear() - data.birth_year << setw(8) << getSystemTimeOfYear() - data.work_year << "年";
 }
 
 class Teacher : public Staff {
@@ -246,6 +246,8 @@ public:
 
     void find_by_name();
 
+    void find_by_age();
+
     void read_data();
 
     void save_data();
@@ -292,12 +294,12 @@ void List::show_all_data() {
     Node *ptr = head;
     Staff *data;
     int count = 1;
-    cout << right << setw(10) << "序号" << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
-         << setw(10) << "工资" << setw(10) << "年龄" << endl;
+    cout << right << setw(4) << "序号" << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
+         << setw(10) << "工资" << setw(10) << "年龄" << setw(10) << "工作时间" << endl;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
         data = ptr->data;
-        cout << right << setw(10) << count++ << *data << endl;
+        cout << right << setw(4) << count++ << *data << endl;
     }
 }
 
@@ -309,11 +311,11 @@ void List::show_simple_data() {
     Node *ptr = head;
     Staff *data;
     int count = 1;
-    cout << right << setw(10) << "序号" << setw(10) << "职别" << setw(10) << "姓名" << setw(10) << "年龄" << endl;
+    cout << right << setw(4) << "序号" << setw(10) << "职别" << setw(10) << "姓名" << setw(10) << "年龄" << endl;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
         data = ptr->data;
-        cout << right << setw(10) << count++ << setw(10) << (data->whoIAm() ? "工人" : "教师") << setw(10) << data->name
+        cout << right << setw(4) << count++ << setw(10) << (data->whoIAm() ? "工人" : "教师") << setw(10) << data->name
              << setw(10) << getSystemTimeOfYear() - data->birth_year << endl;
     }
 }
@@ -383,7 +385,8 @@ void List::insert_tail(Staff *data) {
 void List::delete_teacher_by_name() {
     string name;
     cout << "请输入需要删除教师的 姓名：";
-    cin >> name;
+    cin.get();
+    getline(cin, name);
     Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
@@ -404,7 +407,8 @@ void List::delete_teacher_by_name() {
 void List::delete_teacher_by_code() {
     string code;
     cout << "请输入需要删除教师的 职工号：";
-    cin >> code;
+    cin.get();
+    getline(cin, code);
     Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
@@ -499,18 +503,35 @@ void List::delete_worker() {
 void List::find_by_name() {
     string name;
     cout << "请输入姓名:";
-    cin >> name;
+    cin.get();
+    getline(cin, name);
     Node *ptr = head;
     Staff *data;
+    cout << right << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
+         << setw(10) << "工资" << setw(10) << "年龄" << setw(10) << "工作时间" << endl;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
         ptr = ptr->next;
         data = ptr->data;
         if (data->name == name) {
-            cout << right << setw(10) << (data->whoIAm() ? "工人" : "教师") << setw(10) << data->code
-                 << setw(10) << data->name << setw(10) << (data->gender ? "男" : "女") << setw(10) << data->wage
-                 << setw(10)
-                 << getSystemTimeOfYear() - data->birth_year << endl;
+            cout << right << *data << endl;
             return;
+        }
+    }
+}
+
+void List::find_by_age() {
+    int age;
+    cout << "请输入年龄:";
+    cin >> age;
+    Node *ptr = head;
+    Staff *data;
+    cout << right << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
+         << setw(10) << "工资" << setw(10) << "年龄" << setw(10) << "工作时间" << endl;
+    while (ptr->next != nullptr && ptr->next->next != nullptr) {
+        ptr = ptr->next;
+        data = ptr->data;
+        if (getSystemTimeOfYear() - data->birth_year == age) {
+            cout << right << *data << endl;
         }
     }
 }
@@ -674,7 +695,8 @@ int show_function() {
     cout << "7.删除一个教师" << endl;
     cout << "8.删除一个工人" << endl;
     cout << "9.按姓名检索所有信息" << endl;
-    cout << "10.生成全部人员的年龄统计柱形图" << endl;
+    cout << "10.按年龄检索所有信息" << endl;
+    cout << "11.生成全部人员的年龄统计柱形图" << endl;
     cout << "0.结束程序运行" << endl;
 
     cin >> selection;
@@ -714,7 +736,10 @@ int main() {
             case 9://按姓名检索所有信息
                 list->find_by_name();
                 break;
-            case 10://柱形统计图
+            case 10://按姓名检索所有信息
+                list->find_by_age();
+                break;
+            case 11://柱形统计图
                 list->showGraph();
                 break;
             default:
