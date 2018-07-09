@@ -249,6 +249,8 @@ public:
     void read_data();
 
     void save_data();
+
+    int showGraph();
 };
 
 void List::add_teacher() {
@@ -579,6 +581,82 @@ void List::save_data() {
     outfile.close();
 }
 
+int List::showGraph() {
+    Node *current = getHead()->next;
+    int length = getCount();
+    int number[5] = {0};
+    if (isEmpty()) {
+        cout << "没有数据！" << endl;
+        return 0;
+    }
+    for (int i = 0; i < length; i++) {
+        int age = getSystemTimeOfYear() - current->getData()->birth_year;
+        if (age < 21) {
+            number[0]++;
+        } else if (age >= 21 && age <= 28) {
+            number[1]++;
+        } else if (age > 28 && age <= 35) {
+            number[2]++;
+        } else if (age > 35 && age <= 42) {
+            number[3]++;
+        } else {
+            number[4]++;
+        }
+        current = current->getNext();
+    }
+    for (int i = 0; i < 5; i++) {
+        number[i] = (double) number[i] / getCount() * 10;
+    }
+    cout << "年龄分布百分比统计图" << endl;
+    string arr[10][5];
+    for (int i = 0; i < 5; i++) {
+        int count = number[i];
+        for (int j = 9; j >= 0; j--) {
+            if (number[i] == 0) {
+                break;
+            } else {
+                if (count > 0) {
+                    arr[j][i] = "*    ";
+                } else if (count <= 0) {
+                    arr[j][i] = "     ";
+                }
+                count--;
+            }
+
+        }
+
+
+    }
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 5; j++) {
+            cout << arr[i][j];
+        }
+        cout << endl;
+    }
+    for (int i = 0; i < 5; i++) {
+        if (number[i] != 0) {
+            switch (i) {
+                case 0:
+                    cout << "<21  ";
+                    break;
+                case 1:
+                    cout << "21-28";
+                    break;
+                case 2:
+                    cout << "28-35";
+                    break;
+                case 3:
+                    cout << "35-42";
+                    break;
+                case 4:
+                    cout << "  >42";
+                    break;
+            }
+        }
+    }
+    cout << endl;
+    return 1;
+}
 
 int show_function() {
     int selection;
@@ -592,6 +670,7 @@ int show_function() {
     cout << "7.删除一个教师" << endl;
     cout << "8.删除一个工人" << endl;
     cout << "9.按姓名检索所有信息" << endl;
+    cout << "10.生成全部人员的年龄统计柱形图" << endl;
     cout << "0.结束程序运行" << endl;
 
     cin >> selection;
@@ -630,6 +709,9 @@ int main() {
                 break;
             case 9://按姓名检索所有信息
                 list->find_by_name();
+                break;
+            case 10://柱形统计图
+                list->showGraph();
                 break;
             default:
                 cout << "请输入正确操作数字！" << endl;
