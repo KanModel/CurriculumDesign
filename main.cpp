@@ -78,7 +78,26 @@ public:
 
     Teacher(const string &code, const string &name, int gender, int wage, int birth_year, int work_year) :
             Staff(code, name, gender, wage, birth_year, work_year) {}
+
+    friend istream &operator>>(istream &in, Teacher &teacher);
 };
+
+istream &operator>>(istream &in, Teacher &teacher) {
+    cin.get();
+    cout << "请输入职工号：";
+    getline(cin, teacher.code);
+    cout << "请输入姓名：";
+    getline(cin, teacher.name);
+    cout << "请输入性别[0女/1男]";
+    cin >> teacher.gender;
+    cout << "请输入工资：";
+    cin >> teacher.wage;
+    cout << "请分别输入生日年份：";
+    cin >> teacher.birth_year;
+    cout << "请分别输入入职年份：";
+    cin >> teacher.work_year;
+    return in;
+}
 
 class Worker : public Staff {
 public:
@@ -90,7 +109,26 @@ public:
 
     Worker(const string &code, const string &name, int gender, int wage, int birth_year, int work_year) :
             Staff(code, name, gender, wage, birth_year, work_year) {}
+
+    friend istream &operator>>(istream &in, Worker &worker);
 };
+
+istream &operator>>(istream &in, Worker &worker) {
+    cin.get();
+    cout << "请输入职工号：";
+    getline(cin, worker.code);
+    cout << "请输入姓名：";
+    getline(cin, worker.name);
+    cout << "请输入性别[0女/1男]";
+    cin >> worker.gender;
+    cout << "请输入工资：";
+    cin >> worker.wage;
+    cout << "请分别输入生日年份：";
+    cin >> worker.birth_year;
+    cout << "请分别输入入职年份：";
+    cin >> worker.work_year;
+    return in;
+}
 
 class Node {
 public:
@@ -207,7 +245,7 @@ public:
 };
 
 void List::add_teacher() {
-    string code;
+/*    string code;
     string name;
     int gender;
     int wage;
@@ -225,31 +263,16 @@ void List::add_teacher() {
     cout << "请分别输入生日年份：";
     cin >> birth_year;
     cout << "请分别输入入职年份：";
-    cin >> work_year;
-    insert_head(new Teacher(code, name, gender, wage, birth_year, work_year));
+    cin >> work_year;*/
+    Teacher *teacher = new Teacher;
+    cin >> *teacher;
+    insert_head(teacher);
 }
 
 void List::add_worker() {
-    string code;
-    string name;
-    int gender;
-    int wage;
-    int birth_year;
-    int work_year;
-
-    cout << "请输入职工号：";
-    cin >> code;
-    cout << "请输入姓名：";
-    cin >> name;
-    cout << "请输入性别[0女/1男]";
-    cin >> gender;
-    cout << "请输入工资：";
-    cin >> wage;
-    cout << "请分别输入生日年份：";
-    cin >> birth_year;
-    cout << "请分别输入入职年份：";
-    cin >> work_year;
-    insert_head(new Worker(code, name, gender, wage, birth_year, work_year));
+    Worker *worker = new Worker;
+    cin >> *worker;
+    insert_head(worker);
 }
 
 void List::show_all_data() {
@@ -595,7 +618,7 @@ int main() {
                 list->find_by_name();
                 break;
             default:
-                cout << "请输入正确操作数字！" <<endl;
+                cout << "请输入正确操作数字！" << endl;
                 break;
         }
         selection = show_function();
