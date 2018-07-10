@@ -395,6 +395,7 @@ void List::delete_teacher_by_name() {
         if (data->whoIAm() == TEACHER) {
             if (data->name == name) {
                 ptr->pre->next = ptr->next;
+                ptr->next->pre = ptr->pre;
                 delete ptr;
                 cout << "成功删除姓名为 " << name << " 的教师" << endl;
                 return;
@@ -417,6 +418,7 @@ void List::delete_teacher_by_code() {
         if (data->whoIAm() == TEACHER) {
             if (data->code == code) {
                 ptr->pre->next = ptr->next;
+                ptr->next->pre = ptr->pre;
                 delete ptr;
                 cout << "成功删除 职工号 为 " << code << " 的教师" << endl;
                 return;
@@ -438,6 +440,7 @@ void List::delete_worker_by_name() {
         if (data->whoIAm() == WORKER) {
             if (data->name == name) {
                 ptr->pre->next = ptr->next;
+                ptr->next->pre = ptr->pre;
                 delete ptr;
                 cout << "成功删除姓名为 " << name << " 的工人" << endl;
                 return;
@@ -459,6 +462,7 @@ void List::delete_worker_by_code() {
         if (data->whoIAm() == WORKER) {
             if (data->code == code) {
                 ptr->pre->next = ptr->next;
+                ptr->next->pre = ptr->pre;
                 delete ptr;
                 cout << "成功删除 职工号 为 " << code << " 的工人" << endl;
                 return;
