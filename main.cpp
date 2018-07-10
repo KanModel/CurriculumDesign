@@ -138,9 +138,10 @@ istream &operator>>(istream &in, Worker &worker) {
 }
 
 class Node {
-public:
+private:
     Node *next, *pre;//上一个和下一个节点
     Staff *data;
+public:
 
     Node(Node *next, Node *pre) : next(next), pre(pre) {}
 
@@ -182,8 +183,8 @@ private:
 
 public:
     List() : head(new Node()), tail(new Node), count(0) {
-        head->next = tail;
-        tail->pre = head;
+        head->setNext(tail);
+        tail->setPre(head);
     }
 
     int getCount() {
@@ -277,9 +278,9 @@ void List::show_all_data() {
     int count = 1;
     cout << right << setw(4) << "序号" << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
          << setw(10) << "工资" << setw(10) << "年龄" << setw(10) << "工作时间" << endl;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         cout << right << setw(4) << count++ << *data << endl;
     }
 }
@@ -293,9 +294,9 @@ void List::show_simple_data() {
     Staff *data;
     int count = 1;
     cout << right << setw(4) << "序号" << setw(10) << "职别" << setw(10) << "姓名" << setw(10) << "年龄" << endl;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         cout << right << setw(4) << count++ << setw(10) << (data->whoIAm() ? "工人" : "教师") << setw(10) << data->name
              << setw(10) << getSystemTimeOfYear() - data->birth_year << endl;
     }
@@ -306,9 +307,9 @@ void List::calc_ave_teacher_age() {
     int ave_age, sum = 0;
     Node *ptr = head;
     Staff *data;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         if (data->whoIAm() == TEACHER) {
             count++;
             sum += (getSystemTimeOfYear() - data->birth_year);
@@ -323,9 +324,9 @@ void List::calc_ave_worker_age() {
     int ave_age, sum = 0;
     Node *ptr = head;
     Staff *data;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         if (data->whoIAm() == WORKER) {
             count++;
             sum += (getSystemTimeOfYear() - data->birth_year);
@@ -338,10 +339,15 @@ void List::calc_ave_worker_age() {
 void List::insert_head(Node *node) {
     Node *copy = new Node(*node);
 
-    copy->next = head->next;
-    copy->pre = head;
-    head->next = copy;
-    copy->next->pre = copy;
+//    copy->next = head->next;
+//    copy->pre = head;
+//    head->next = copy;
+//    copy->next->pre = copy;
+
+    copy->setNext(head->getNext());
+    copy->setPre(head);
+    head->setNext(copy);
+    copy->getNext()->setPre(copy);
     count++;
 }
 
@@ -352,10 +358,15 @@ void List::insert_head(Staff *data) {
 void List::insert_tail(Node *node) {
     Node *copy = new Node(*node);
 
-    copy->next = tail;
-    copy->pre = tail->pre;
-    tail->pre->next = copy;
-    tail->pre = copy;
+//    copy->next = tail;
+//    copy->pre = tail->pre;
+//    tail->pre->next = copy;
+//    tail->pre = copy;
+
+    copy->setNext(tail);
+    copy->setPre(tail->getPre());
+    tail->getPre()->setNext(copy);
+    tail->setPre(copy);
     count++;
 }
 
@@ -370,13 +381,15 @@ void List::delete_teacher_by_name() {
     getline(cin, name);
     Node *ptr = head;
     Staff *data;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         if (data->whoIAm() == TEACHER) {
             if (data->name == name) {
-                ptr->pre->next = ptr->next;
-                ptr->next->pre = ptr->pre;
+//                ptr->pre->next = ptr->next;
+//                ptr->next->pre = ptr->pre;
+                ptr->getPre()->setNext(ptr->getNext());
+                ptr->getNext()->setPre(ptr->getPre());
                 delete ptr;
                 cout << "成功删除姓名为 " << name << " 的教师" << endl;
                 count--;
@@ -394,13 +407,13 @@ void List::delete_teacher_by_code() {
     getline(cin, code);
     Node *ptr = head;
     Staff *data;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         if (data->whoIAm() == TEACHER) {
             if (data->code == code) {
-                ptr->pre->next = ptr->next;
-                ptr->next->pre = ptr->pre;
+                ptr->getPre()->setNext(ptr->getNext());
+                ptr->getNext()->setPre(ptr->getPre());
                 delete ptr;
                 cout << "成功删除 职工号 为 " << code << " 的教师" << endl;
                 count--;
@@ -418,13 +431,13 @@ void List::delete_worker_by_name() {
     getline(cin, name);
     Node *ptr = head;
     Staff *data;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         if (data->whoIAm() == WORKER) {
             if (data->name == name) {
-                ptr->pre->next = ptr->next;
-                ptr->next->pre = ptr->pre;
+                ptr->getPre()->setNext(ptr->getNext());
+                ptr->getNext()->setPre(ptr->getPre());
                 delete ptr;
                 cout << "成功删除姓名为 " << name << " 的工人" << endl;
                 count--;
@@ -442,13 +455,13 @@ void List::delete_worker_by_code() {
     getline(cin, code);
     Node *ptr = head;
     Staff *data;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         if (data->whoIAm() == WORKER) {
             if (data->code == code) {
-                ptr->pre->next = ptr->next;
-                ptr->next->pre = ptr->pre;
+                ptr->getPre()->setNext(ptr->getNext());
+                ptr->getNext()->setPre(ptr->getPre());
                 delete ptr;
                 cout << "成功删除 职工号 为 " << code << " 的工人" << endl;
                 count--;
@@ -500,9 +513,9 @@ void List::find_by_name() {
     Staff *data;
     cout << right << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
          << setw(10) << "工资" << setw(10) << "年龄" << setw(10) << "工作时间" << endl;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         if (data->name == name) {
             cout << right << *data << endl;
             return;
@@ -518,9 +531,9 @@ void List::find_by_age() {
     Staff *data;
     cout << right << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
          << setw(10) << "工资" << setw(10) << "年龄" << setw(10) << "工作时间" << endl;
-    while (ptr->next != nullptr && ptr->next->next != nullptr) {
-        ptr = ptr->next;
-        data = ptr->data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
         if (getSystemTimeOfYear() - data->birth_year == age) {
             cout << right << *data << endl;
         }
@@ -594,7 +607,7 @@ void List::save_data() {
 }
 
 int List::showGraph() {
-    Node *current = getHead()->next;
+    Node *current = getHead()->getNext();
     int length = getCount();
     double number[5] = {0.0};
     if (isEmpty()) {
