@@ -3,8 +3,8 @@
 设计要求实现如下功能：
 （1）建立职工信息数据，包括职工编号、姓名、性别、工资、出生时间、参加工作时间和年龄（必须计算得到）。 √
 （2）根据职工信息表，建立只含有姓名和年龄的职工信息简表。（可选功能） √
-（3）使用继承的方法构造3个类，（即雇员类——虚基类，教师类和工人类——派生类）使用相应的对象放置10个职工信息。 todo 10个信息
-（4）编写同名display()成员函数，用来输出数组的内容。 todo
+（3）使用继承的方法构造3个类，（即雇员类——虚基类，教师类和工人类——派生类）使用相应的对象放置10个职工信息。 √
+（4）编写同名display()成员函数，用来输出数组的内容。 √
 （5）按不同类别输出职工信息，比如按系输出教师信息。（可选功能） todo
 （6）要求对“＜＜”和“＞＞”运算符进行重载。考虑到输人职工编号时，也会因不小心引人空格，而且名字中也需要有空格，所以重载“＞＞’’运算符时，需要满足这个要求。 √
 （7）抽取并计算职工的平均年龄。 √
@@ -221,39 +221,41 @@ public:
     void insert_head(Node *copy);//从头插入
     void insert_head(Staff *data);//从头插入
 
-    void add_teacher();
+    void add_teacher();//添加教师
 
-    void add_worker();
+    void add_worker();//添加工人
 
-    void show_all_data();
+    void show_all_data();//输出所有信息
 
-    void show_simple_data();
+    void show_simple_data();//输出信息简表
 
-    void calc_ave_teacher_age();
+    void calc_ave_teacher_age();//计算教师平均年龄
 
-    void calc_ave_worker_age();
+    void calc_ave_worker_age();//计算工人评价年龄
 
-    void delete_teacher();
+    void delete_teacher();//删除教师
 
-    void delete_teacher_by_name();
+    void delete_teacher_by_name();//通过姓名删除教师
 
-    void delete_teacher_by_code();
+    void delete_teacher_by_code();//通过职工号删除教师
 
-    void delete_worker();
+    void delete_worker();//删除工人
 
-    void delete_worker_by_name();
+    void delete_worker_by_name();//通过姓名删除工人
 
-    void delete_worker_by_code();
+    void delete_worker_by_code();//通过职工号删除工人
 
-    void find_by_name();
+    void find_by_name();//通过姓名查找信息
 
-    void find_by_age();
+    void find_by_age();//通过年龄查找信息
 
-    void read_data();
+    void modify();//修改数据
 
-    void save_data();
+    void read_data();//读取文本文件中存储的数据
 
-    int showGraph();
+    void save_data();//保存数据到文本文件
+
+    int show_graph();//显示年龄分布柱状图
 };
 
 void List::add_teacher() {
@@ -338,12 +340,6 @@ void List::calc_ave_worker_age() {
 
 void List::insert_head(Node *node) {
     Node *copy = new Node(*node);
-
-//    copy->next = head->next;
-//    copy->pre = head;
-//    head->next = copy;
-//    copy->next->pre = copy;
-
     copy->setNext(head->getNext());
     copy->setPre(head);
     head->setNext(copy);
@@ -357,12 +353,6 @@ void List::insert_head(Staff *data) {
 
 void List::insert_tail(Node *node) {
     Node *copy = new Node(*node);
-
-//    copy->next = tail;
-//    copy->pre = tail->pre;
-//    tail->pre->next = copy;
-//    tail->pre = copy;
-
     copy->setNext(tail);
     copy->setPre(tail->getPre());
     tail->getPre()->setNext(copy);
@@ -386,8 +376,6 @@ void List::delete_teacher_by_name() {
         data = ptr->getData();
         if (data->whoIAm() == TEACHER) {
             if (data->name == name) {
-//                ptr->pre->next = ptr->next;
-//                ptr->next->pre = ptr->pre;
                 ptr->getPre()->setNext(ptr->getNext());
                 ptr->getNext()->setPre(ptr->getPre());
                 delete ptr;
@@ -540,6 +528,85 @@ void List::find_by_age() {
     }
 }
 
+void List::modify() {
+    bool isFind = false;
+    string name;
+    cout << "请输入姓名:";
+    cin.get();
+    getline(cin, name);
+    Node *ptr = head;
+    Staff *data;
+    while (ptr->getNext() != nullptr && ptr->getNext()->getNext() != nullptr) {
+        ptr = ptr->getNext();
+        data = ptr->getData();
+        if (data->name == name) {
+            cout << "寻找到对应信息！" << endl;
+            cout << right << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
+                 << setw(10) << "工资" << setw(10) << "年龄" << setw(10) << "工作时间" << endl;
+            cout << right << *data << endl;
+            isFind = true;
+            break;
+        }
+    }
+
+    if (isFind) {
+        int selection;
+        cout << "请选择需要更改的内容[输入0退出]：" << endl;
+        cout << "1、职工号" << endl;
+        cout << "2、姓名" << endl;
+        cout << "3、性别" << endl;
+        cout << "4、工资" << endl;
+        cout << "5、出生年份" << endl;
+        cout << "6、入职年份" << endl;
+        cin >> selection;
+        while (selection != 0) {
+            switch (selection) {
+                case 1:
+                    cout << "请输入新的职工号：";
+                    cin.get();
+                    getline(cin, data->code);
+                    break;
+                case 2:
+                    cout << "请输入新的姓名：";
+                    cin.get();
+                    getline(cin, data->name);
+                    break;
+                case 3:
+                    cout << "请输入新的性别[0女/1男]：";
+                    cin >> data->gender;
+                    break;
+                case 4:
+                    cout << "请输入新的工资：";
+                    cin >> data->wage;
+                    break;
+                case 5:
+                    cout << "请输入新的出生年份：";
+                    cin >> data->birth_year;
+                    break;
+                case 6:
+                    cout << "请输入新的入职年份：";
+                    cin >> data->work_year;
+                    break;
+            }
+            cout << "请选择需要更改的内容[输入0退出]：" << endl;
+            cout << "1、职工号" << endl;
+            cout << "2、姓名" << endl;
+            cout << "3、性别" << endl;
+            cout << "4、工资" << endl;
+            cout << "5、出生年份" << endl;
+            cout << "6、入职年份" << endl;
+            cin >> selection;
+        }
+        cout << "修改后信息：" << endl;
+        cout << right << setw(10) << "职别" << setw(10) << "职工号" << setw(10) << "姓名" << setw(10) << "性别"
+             << setw(10) << "工资" << setw(10) << "年龄" << setw(10) << "工作时间" << endl;
+        cout << right << *data << endl;
+    } else {
+        cout << "未寻找到对应信息！" << endl;
+    }
+
+}
+
 void List::read_data() {
     ofstream ofile;
     ofile.open("data.txt", ios::app);
@@ -606,7 +673,7 @@ void List::save_data() {
     outfile.close();
 }
 
-int List::showGraph() {
+int List::show_graph() {
     Node *current = getHead()->getNext();
     int length = getCount();
     double number[5] = {0.0};
@@ -701,6 +768,7 @@ int show_function() {
     cout << "9.按姓名检索所有信息" << endl;
     cout << "10.按年龄检索所有信息" << endl;
     cout << "11.生成全部人员的年龄统计柱形图" << endl;
+    cout << "12.修改信息" << endl;
     cout << "0.结束程序运行" << endl;
 
     cin >> selection;
@@ -744,7 +812,10 @@ int main() {
                 list->find_by_age();
                 break;
             case 11://柱形统计图
-                list->showGraph();
+                list->show_graph();
+                break;
+            case 12://修改数据
+                list->modify();
                 break;
             default:
                 cout << "请输入正确操作数字！" << endl;
