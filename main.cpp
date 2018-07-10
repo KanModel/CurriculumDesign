@@ -256,25 +256,6 @@ public:
 };
 
 void List::add_teacher() {
-/*    string code;
-    string name;
-    int gender;
-    int wage;
-    int birth_year;
-    int work_year;
-
-    cout << "请输入职工号：";
-    cin >> code;
-    cout << "请输入姓名：";
-    cin >> name;
-    cout << "请输入性别[0女/1男]";
-    cin >> gender;
-    cout << "请输入工资：";
-    cin >> wage;
-    cout << "请分别输入生日年份：";
-    cin >> birth_year;
-    cout << "请分别输入入职年份：";
-    cin >> work_year;*/
     Teacher *teacher = new Teacher;
     cin >> *teacher;
     insert_tail(teacher);
@@ -398,6 +379,7 @@ void List::delete_teacher_by_name() {
                 ptr->next->pre = ptr->pre;
                 delete ptr;
                 cout << "成功删除姓名为 " << name << " 的教师" << endl;
+                count--;
                 return;
             }
         }
@@ -421,6 +403,7 @@ void List::delete_teacher_by_code() {
                 ptr->next->pre = ptr->pre;
                 delete ptr;
                 cout << "成功删除 职工号 为 " << code << " 的教师" << endl;
+                count--;
                 return;
             }
         }
@@ -431,7 +414,8 @@ void List::delete_teacher_by_code() {
 void List::delete_worker_by_name() {
     string name;
     cout << "请输入需要删除工人的 姓名：";
-    cin >> name;
+    cin.get();
+    getline(cin, name);
     Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
@@ -443,6 +427,7 @@ void List::delete_worker_by_name() {
                 ptr->next->pre = ptr->pre;
                 delete ptr;
                 cout << "成功删除姓名为 " << name << " 的工人" << endl;
+                count--;
                 return;
             }
         }
@@ -453,7 +438,8 @@ void List::delete_worker_by_name() {
 void List::delete_worker_by_code() {
     string code;
     cout << "请输入需要删除工人的 职工号：";
-    cin >> code;
+    cin.get();
+    getline(cin, code);
     Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
@@ -465,6 +451,7 @@ void List::delete_worker_by_code() {
                 ptr->next->pre = ptr->pre;
                 delete ptr;
                 cout << "成功删除 职工号 为 " << code << " 的工人" << endl;
+                count--;
                 return;
             }
         }
