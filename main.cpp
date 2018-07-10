@@ -322,7 +322,7 @@ void List::show_simple_data() {
 
 void List::calc_ave_teacher_age() {
     int count = 0;
-    double ave_age, sum = 0;
+    int ave_age, sum = 0;
     Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
@@ -339,7 +339,7 @@ void List::calc_ave_teacher_age() {
 
 void List::calc_ave_worker_age() {
     int count = 0;
-    double ave_age, sum = 0;
+    int ave_age, sum = 0;
     Node *ptr = head;
     Staff *data;
     while (ptr->next != nullptr && ptr->next->next != nullptr) {
@@ -641,9 +641,9 @@ int List::showGraph() {
                 break;
             } else {
                 if (count > 0) {
-                    arr[j][i] = "*    ";
+                    arr[j][i] = "  *    ";
                 } else if (count <= 0) {
-                    arr[j][i] = "     ";
+                    arr[j][i] = "       ";
                 }
                 count--;
             }
@@ -658,7 +658,7 @@ int List::showGraph() {
     for (int i = 0; i < 5; i++) {
         if (number[i] != 0) {
             printf("%.1f", number[i]);
-            cout << "%";
+            cout << "%  ";
         }
     }
     cout << endl;
@@ -666,16 +666,16 @@ int List::showGraph() {
         if (number[i] != 0) {
             switch (i) {
                 case 0:
-                    cout << "<21  ";
+                    cout << "<21    ";
                     break;
                 case 1:
-                    cout << "21-28";
+                    cout << "21-28  ";
                     break;
                 case 2:
-                    cout << "28-35";
+                    cout << "28-35  ";
                     break;
                 case 3:
-                    cout << "35-42";
+                    cout << "35-42  ";
                     break;
                 case 4:
                     cout << "  >42";
